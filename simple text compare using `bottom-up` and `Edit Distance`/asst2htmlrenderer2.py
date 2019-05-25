@@ -129,6 +129,7 @@ def fill_table_score(section1, section2):
 
 
 def get_result(i, j, table, list1, list2):
+    ''' get result '''
     result = []
     while i > 0 or j > 0:
         min_cost = min(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1])
@@ -151,6 +152,7 @@ def get_result(i, j, table, list1, list2):
 
 
 def get_table_score(s1, s2, cache, i=None, j=None):
+    ''' get table score '''
     if cache[i][j] == None:
         if j == 0 or i == 0:
             cache[i][j] = 0
@@ -174,7 +176,7 @@ def longest_common_substring(s1, s2):
         if i > 0 and j > 0:
             if s1[i-1] == s2[j-1]:
                 result1.insert(0, s1[i - 1])
-                result2.insert(0, s1[i - 1])
+                result2.insert(0, s2[j - 1])
                 longest_substring(i - 1, j - 1, result1, result2, table)
             else:
                 if get_table_score(s1, s2, table, i-1, j) <= get_table_score(s1, s2, table, i, j-1):
@@ -194,7 +196,7 @@ def longest_common_substring(s1, s2):
 
 
 def line_edits(str1, str2):
-    ''' get longest substring '''
+    ''' line edits '''
     str_list1 = str1.splitlines()
     str_list2 = str2.splitlines()
     i = len(str_list1)

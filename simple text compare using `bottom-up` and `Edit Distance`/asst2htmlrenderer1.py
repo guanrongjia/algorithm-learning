@@ -112,95 +112,95 @@ def edit_table(operations):
 #
 # Your line_edits function and any support functions goes here.
 #
-def fill_table_score(section1, section2):
-    ''' fill table '''
+def calc_score_table(section1, section2):
+    ''' return score of position in table  '''
     m = len(section1) + 1
     n = len(section2) + 1
-    table = [[0 for j in range(n)] for i in range(m)]
-    for i in range(0, m):
-        for j in range(0, n):
-            if i == 0 or j == 0:
-                table[i][j] = i or j
-            elif section1[i-1] == section2[j-1]:
-                table[i][j] = table[i - 1][j - 1]
-            else:
-                table[i][j] = 1 + min(table[i - 1][j], table[i][j - 1],table[i - 1][j - 1])
+    table = [[0 for i in range(n)] for j in range(m)]
+    for t in range(n):
+        table[0][t] = t
+    for t in range(m):
+        table[t][0] = t
+    for i in range(1, m):
+        for j in range(1, n):
+            table[i][j] = min(table[i - 1][j] + 1, table[i][j - 1] + 1,
+                              table[i - 1][j - 1] + (0 if section1[i - 1] == section2[j - 1] else 1))
     return table
 
 
-def get_result(i, j, table, list1, list2):
+def line_edits(str1, str2):
+    ''' main function  '''
+    section1 = str1.splitlines()
+    section2 = str2.splitlines()
+    table = calc_score_table(section1, section2)
+    i = len(section1)
+    j = len(section2)
     result = []
     while i > 0 or j > 0:
-        min_cost = min(table[i - 1][j], table[i][j - 1], table[i - 1][j - 1])
-        if min_cost == table[i][j]:
-            result.insert(0, ('T', list1[i - 1], list2[j - 1]))
+        _d = table[i - 1][j] if i > 0 else 9
+        _i = table[i][j - 1] if j > 0 else 9
+        _s = table[i - 1][j - 1] if j > 0 and i > 0 else 9
+        min_change = min(_d, _i, _s)
+        if min_change == table[i][j]:
+            line_data = ['T', section1[i - 1], section2[j - 1]]
             i -= 1
             j -= 1
-        elif min_cost == table[i - 1][j]:
-            result.insert(0, ('D', list1[i - 1], ''))
+        elif min_change == _d:
+            line_data = ['D', section1[i - 1], '']
             i -= 1
-        elif min_cost == table[i][j - 1]:
-            result.insert(0, ('I', '', list2[j - 1]))
+        elif min_change == _i:
+            line_data = ['I', '', section2[j - 1]]
             j -= 1
         else:
-            s1, s2 = longest_common_substring(list1[i - 1], list2[j - 1])
-            result.insert(0, ('S', s1, s2))
+            str1, str2 = longest_common_substring(section1[i - 1], section2[j - 1])
+            line_data = ['S', str1, str2]
             i -= 1
             j -= 1
+
+        result.append(tuple(line_data))
+    result.reverse()
     return result
 
 
-def get_table_score(s1, s2, cache, i=None, j=None):
-    if cache[i][j] == None:
-        if j == 0 or i == 0:
-            cache[i][j] = 0
-        elif s1[i - 1] == s2[j - 1]:
-            cache[i][j] = get_table_score(s1, s2, cache, i - 1, j - 1) + 1
-        else:
-            num_1 = get_table_score(s1, s2, cache, i, j - 1)
-            num_2 = get_table_score(s1, s2, cache, i - 1, j)
-            cache[i][j] = max(num_1, num_2)
-    return cache[i][j]
-
-
 def longest_common_substring(s1, s2):
-    """ longest substring, """
-    table = [[None for j in range(len(s2) + 1)] for i in range(len(s1) + 1)]
-    result1 = []
-    result2 = []
-
-    def longest_substring(i, j, result1, result2, table):
-        ''' get longest substring '''
-        if i > 0 and j > 0:
-            if s1[i-1] == s2[j-1]:
-                result1.insert(0, s1[i - 1])
-                result2.insert(0, s1[i - 1])
-                longest_substring(i - 1, j - 1, result1, result2, table)
+    """ calculate the longest common substring """
+    row_num = len(s1) + 1
+    col_num = len(s2) + 1
+    table = [[None] * col_num for i in range(row_num)]
+    for row_index in range(row_num):
+        for col_index in range(col_num):
+            if row_index == 0 or col_index == 0:
+                table[row_index][col_index] = 0
+            elif s1[row_index - 1] == s2[col_index - 1]:
+                table[row_index][col_index] = table[row_index - 1][col_index - 1] + 1
             else:
-                if get_table_score(s1, s2, table, i-1, j) <= get_table_score(s1, s2, table, i, j-1):
-                    result2.insert(0, '[[{}]]'.format(s2[j - 1]))
-                    longest_substring(i, j - 1, result1, result2, table)
-                else:
-                    result1.insert(0, '[[{}]]'.format(s1[i - 1]))
-                    longest_substring(i - 1, j, result1, result2, table)
+                table[row_index][col_index] = max(table[row_index - 1][col_index], table[row_index][col_index - 1])
+    # find longest common substring
+    r1 = []
+    r2 = []
+    row_index = len(s1)
+    col_index = len(s2)
+    while row_index > 0 and col_index > 0:
+        if s1[row_index - 1] == s2[col_index - 1]:
+            r1.append(s1[row_index - 1])
+            r2.append(s2[col_index - 1])
+            row_index -= 1
+            col_index -= 1
         else:
-            if i > 0:
-                result1.insert(0, ''.join(['[[{}]]'.format(char) for char in s1[:i]]))
-            if j > 0:
-                result2.insert(0, ''.join(['[[{}]]'.format(char) for char in s2[:i]]))
+            if table[row_index - 1][col_index] > table[row_index][col_index - 1]:
+                r1.append('[['+s1[row_index - 1]+']]')
+                row_index -= 1
+            else:
+                r2.append('[['+s2[col_index - 1]+']]')
+                col_index -= 1
+    if row_index > 0:
+        r1.append(''.join(['[['+char+']]' for char in s1[:row_index]]))
+    if col_index > 0:
+        r2.append(''.join(['[[{'+char+'}]]' for char in s2[:col_index]]))
 
-    longest_substring(len(s1), len(s2), result1, result2, table)
-    return ''.join(result1), ''.join(result2)
-
-
-def line_edits(str1, str2):
-    ''' get longest substring '''
-    str_list1 = str1.splitlines()
-    str_list2 = str2.splitlines()
-    i = len(str_list1)
-    j = len(str_list2)
-    table = fill_table_score(str_list1, str_list2)
-    return get_result(i, j, table, str_list1, str_list2)
+    r1.reverse()
+    r2.reverse()
+    return ''.join(r1), ''.join(r2)
 
 #************************************************************************
 

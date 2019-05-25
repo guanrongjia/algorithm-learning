@@ -25,10 +25,15 @@ using python3
 > [demo2](https://github.com/guanrongjia/algorithm-learning/blob/master/LCS%20bottom-up%20DP%20aproach/test3.3.py)
 
 ### simple text compare using `bottom-up` and `Edit Distance`
-> [demo1](https://github.com/)
+> [demo1 core code](https://github.com/)
+> [demo1 core code](https://github.com/)
 
-> [demo2](https://github.com/)
+> [demo1 core code](https://github.com/)
+> [demo1 core code](https://github.com/)
 
-> [demo2](https://github.com/)
+> [demo1 core code](https://github.com/)
+> [demo1 core code](https://github.com/)
+
 ----------------------------
+
 
