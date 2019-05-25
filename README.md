@@ -18,10 +18,11 @@ using python3
 
 
 ### Edit Distance
-> [demo1](https://github.com/)
+> [demo1](https://github.com/guanrongjia/algorithm-learning/blob/master/LCS%20bottom-up%20DP%20aproach/test1.3.py)
 
-> [demo2](https://github.com/)
+> [demo2](https://github.com/guanrongjia/algorithm-learning/blob/master/LCS%20bottom-up%20DP%20aproach/test2.3.py)
 
+> [demo2](https://github.com/guanrongjia/algorithm-learning/blob/master/LCS%20bottom-up%20DP%20aproach/test3.3.py)
 
 ### simple text compare using `bottom-up` and `Edit Distance`
 > [demo1](https://github.com/)
