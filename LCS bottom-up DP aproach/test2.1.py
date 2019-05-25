@@ -1,33 +1,35 @@
-def init_table(s1, s2):
-    """ init_table """
-    return [[None for c in range(len(s2) + 1)] for r in range(len(s1) + 1)]
+def get_table_score(s1, s2, cache, i=None, j=None):
+    ''' using Recursion to calculate value of table cell '''
+    if cache[i][j] == None:
+        if j == 0 or i == 0:
+            cache[i][j] = 0
+        elif s1[i - 1] == s2[j - 1]:
+            cache[i][j] = get_table_score(s1, s2, cache, i - 1, j - 1) + 1
+        else:
+            num_1 = get_table_score(s1, s2, cache, i, j - 1)
+            num_2 = get_table_score(s1, s2, cache, i - 1, j)
+            cache[i][j] = max(num_1, num_2)
+    return cache[i][j]
 
 
 def longest_common_substring(s1, s2):
-    '''  longest_common_substring'''
+    """ longest substring """
+    table = [[None for j in range(len(s2) + 1)] for i in range(len(s1) + 1)]
+    result = [0] * (get_table_score(s1, s2, table, len(s1), len(s2)))
 
-    def calc_longest_string(s1, s2, i, j):
-        ''' calc_longest_string '''
-        if table[i][j] != None:
-            return table[i][j]
-        else:
-            if j == 0 or i == 0:
-                table[i][j] = ''
-                return ''
-            elif s1[i - 1] == s2[j - 1]:
-                table[i][j] = calc_longest_string(s1, s2, i - 1, j - 1) + s1[i - 1]
-                return table[i][j]
+    def longest_substring(i, j):
+        ''' get longest substring '''
+        if i > 0 and j > 0:
+            if s1[i-1] == s2[j-1]:
+                result[get_table_score(s1, s2, table, i, j) - 1] = s1[i - 1]
+                longest_substring(i - 1, j - 1)
             else:
-                str1 = calc_longest_string(s1, s2, i, j - 1)
-                str2 = calc_longest_string(s1, s2, i - 1, j)
-                if len(str1) > len(str2):
-                    table[i][j] = str1
+                if get_table_score(s1, s2, table, i-1, j) <= get_table_score(s1, s2, table, i, j-1):
+                    longest_substring(i, j - 1)
                 else:
-                    table[i][j] = str2
-                return table[i][j]
-
-    table = init_table(s1, s2)
-    return calc_longest_string(s1, s2, len(s1), len(s2))
+                    longest_substring(i - 1, j)
+    longest_substring(len(s1), len(s2))
+    return ''.join(result)
 
 
 if __name__ == '__main__':
@@ -77,4 +79,3 @@ if __name__ == '__main__':
         if not is_correct:
             print('result    ', result)
             print('calc_result    ', calc_result)
-        print('*' * 5)

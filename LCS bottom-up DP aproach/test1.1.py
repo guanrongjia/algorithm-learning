@@ -1,34 +1,31 @@
-def get_table_score(s1, s2, cache, i=None, j=None):
+def longest_common_substring(s1, s2, cache=None, i=None, j=None):
+    '''longest_common_substring'''
+    lst_1 = list(s1)
+    lst_2 = list(s2)
+
+    if cache == None:
+        i = len(s1)
+        j = len(s2)
+        cache = [[None for _ in range(j+1)] for __ in range(i+1)]
+
     if cache[i][j] == None:
         if j == 0 or i == 0:
-            cache[i][j] = 0
-        elif s1[i - 1] == s2[j - 1]:
-            cache[i][j] = get_table_score(s1, s2, cache, i - 1, j - 1) + 1
+            cache[i][j] = ''
+            return ''
+        elif lst_1[i-1] == lst_2[j-1]:
+            table = longest_common_substring(s1, s2, cache, i - 1, j - 1) + s1[i - 1]
+            cache[i][j] = table
+            return table
         else:
-            num_1 = get_table_score(s1, s2, cache, i, j - 1)
-            num_2 = get_table_score(s1, s2, cache, i - 1, j)
-            cache[i][j] = max(num_1, num_2)
-    return cache[i][j]
-
-
-def longest_common_substring(s1, s2):
-    """ longest substring, """
-    table = [[None for j in range(len(s2) + 1)] for i in range(len(s1) + 1)]
-    result = [0] * (get_table_score(s1, s2, table, len(s1), len(s2)))
-
-    def longest_substring(i, j):
-        ''' get longest substring '''
-        if i > 0 and j > 0:
-            if s1[i-1] == s2[j-1]:
-                result[get_table_score(s1, s2, table, i, j) - 1] = s1[i - 1]
-                longest_substring(i - 1, j - 1)
+            num_1 = len(longest_common_substring(s1, s2, cache, i, j - 1))
+            num_2 = len(longest_common_substring(s1, s2, cache, i - 1, j))
+            if num_1 > num_2:
+                table = longest_common_substring(s1, s2, cache, i, j - 1)
             else:
-                if get_table_score(s1, s2, table, i-1, j) <= get_table_score(s1, s2, table, i, j-1):
-                    longest_substring(i, j - 1)
-                else:
-                    longest_substring(i - 1, j)
-    longest_substring(len(s1), len(s2))
-    return ''.join(result)
+                table = longest_common_substring(s1, s2, cache, i - 1, j)
+            cache[i][j] = table
+            return table
+    return cache[i][j]
 
 
 if __name__ == '__main__':
@@ -78,3 +75,4 @@ if __name__ == '__main__':
         if not is_correct:
             print('result    ', result)
             print('calc_result    ', calc_result)
+        print('*' * 5)

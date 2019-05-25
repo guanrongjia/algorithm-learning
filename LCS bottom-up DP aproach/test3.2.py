@@ -1,5 +1,5 @@
 def longest_common_substring(s1, s2):
-    '''ppap'''
+    '''longest_common_substring'''
     m = len(s1)
     n = len(s2)
     table = [[0 for _ in range(n + 1)] for __ in range(m + 1)]
