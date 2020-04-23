@@ -10,9 +10,11 @@ def make_table(sec_1, sec_2):
     for i in range(1, m):
         for j in range(1, n):
             if sec_1[i - 1] == sec_2[j - 1]:
-                table[i][j] = min(table[i - 1][j] + 1, table[i][j - 1] + 1, table[i - 1][j - 1] + 0)
+                table[i][j] = min(table[i - 1][j] + 1, table[i]
+                                  [j - 1] + 1, table[i - 1][j - 1] + 0)
             else:
-                table[i][j] = min(table[i - 1][j] + 1, table[i][j - 1] + 1, table[i - 1][j - 1] + 1)
+                table[i][j] = min(table[i - 1][j] + 1, table[i]
+                                  [j - 1] + 1, table[i - 1][j - 1] + 1)
     return table
 
 
@@ -34,7 +36,7 @@ def mmp(sec_1, sec_2, table, i, j):
             num_3 = 9
         num_min = min(num_1, num_2, num_3)
         if num_min == table[i][j]:
-            line_data = ['T', sec_1[i - 1], sec_2[j - 1]]
+            line_data = ['C', sec_1[i - 1], sec_2[j - 1]]
             i -= 1
             j -= 1
         elif num_min == num_1:
@@ -63,7 +65,6 @@ def line_edits(s1, s2):
     return lst
 
 
-
 if __name__ == '__main__':
     # auto test
     test_data = [
@@ -73,17 +74,17 @@ if __name__ == '__main__':
 
         {'s1': "Line1\nLine3\nLine5\n",
          's2': "Twaddle\nLine5\n",
-         'result': [('S', 'Line1', 'Twaddle'), ('D', 'Line3', ''), ('T', 'Line5', 'Line5')]},
+         'result': [('D', 'Line1', ''), ('S', 'Line3', 'Twaddle'),  ('C', 'Line5', 'Line5')]},
 
         {'s1': "Line1\nLine2\nLine3\nLine4\n",
-          's2': "Line1\nLine3\nLine4\nLine5\n",
-          'result': [('T', 'Line1', 'Line1'), ('D', 'Line2', ''), ('T', 'Line3', 'Line3'),
-                     ('T', 'Line4', 'Line4'), ('I', '', 'Line5')]},
+         's2': "Line1\nLine3\nLine4\nLine5\n",
+         'result': [('C', 'Line1', 'Line1'), ('D', 'Line2', ''), ('C', 'Line3', 'Line3'),
+                    ('C', 'Line4', 'Line4'), ('I', '', 'Line5')]},
 
         {'s1': "Line1\nLine2\nLine3\nLine4\n",
-          's2': "Line5\nLine4\nLine3\n",
-          'result': [('S', 'Line1', 'Line5'), ('S', 'Line2', 'Line4'), ('T', 'Line3', 'Line3'),
-                     ('D', 'Line4', '')]},
+         's2': "Line5\nLine4\nLine3\n",
+         'result': [('S', 'Line1', 'Line5'), ('S', 'Line2', 'Line4'), ('C', 'Line3', 'Line3'),
+                    ('D', 'Line4', '')]},
 
         {'s1': r'''# ============== DELETEs =====================
 # TODO: add docstrings
@@ -133,7 +134,7 @@ def clear_queue():
         response.status_code = 204
         return response
 ''',
-         'result':[('T', '# ============== DELETEs =====================', '# ============== DELETEs ====================='), ('D', '# TODO: add docstrings', ''), ('T', "@app.route('/queue/<hostname>', methods=['DELETE'])", "@app.route('/queue/<hostname>', methods=['DELETE'])"), ('T', 'def delete(hostname):', 'def delete(hostname):'), ('I', '', '    """Handle delete request from the given host"""'), ('T', '    try:', '    try:'), ('T', '        data = json.loads(request.get_data())', '        data = json.loads(request.get_data())'), ('S', "        mac_address = data['macAddress']", "        mac_address = data['mac_address']"), ('T', '    except:', '    except:'), ('T', "        abort(400, 'Missing or invalid user data')", "        abort(400, 'Missing or invalid user data')"), ('S', '    status = queue.dequeue(hostname, macAddress)', '    status = queue.dequeue(hostname, mac_address)'), ('T', "    return ('', status)", "    return ('', status)"), ('T', '', ''), ('T', '', ''), ('T', "@app.route('/queue', methods=['DELETE'])", "@app.route('/queue', methods=['DELETE'])"), ('S', 'def empty_queue():', 'def clear_queue():'), ('I', '', '    """Clear the queue. Valid only if coming from tutor machine"""'), ('T', '    if request.remote_addr.upper() != TUTOR_MACHINE.upper():', '    if request.remote_addr.upper() != TUTOR_MACHINE.upper():'), ('S', '        abort(403, "Not authorised")', '        abort(403, "Only the tutor machine can clear the queue")'), ('T', '    else:', '    else:'), ('T', '        queue.clear_queue()', '        queue.clear_queue()'), ('S', '        response = jsonify({"message": "Queue emptied"})', '        response = jsonify({"message": "Queue cleared"})'), ('T', '        response.status_code = 204', '        response.status_code = 204'), ('T', '        return response', '        return response')]},
+         'result': [('C', '# ============== DELETEs =====================', '# ============== DELETEs ====================='), ('D', '# TODO: add docstrings', ''), ('C', "@app.route('/queue/<hostname>', methods=['DELETE'])", "@app.route('/queue/<hostname>', methods=['DELETE'])"), ('C', 'def delete(hostname):', 'def delete(hostname):'), ('I', '', '    """Handle delete request from the given host"""'), ('C', '    try:', '    try:'), ('C', '        data = json.loads(request.get_data())', '        data = json.loads(request.get_data())'), ('S', "        mac_address = data['macAddress']", "        mac_address = data['mac_address']"), ('C', '    except:', '    except:'), ('C', "        abort(400, 'Missing or invalid user data')", "        abort(400, 'Missing or invalid user data')"), ('S', '    status = queue.dequeue(hostname, macAddress)', '    status = queue.dequeue(hostname, mac_address)'), ('C', "    return ('', status)", "    return ('', status)"), ('C', '', ''), ('C', '', ''), ('C', "@app.route('/queue', methods=['DELETE'])", "@app.route('/queue', methods=['DELETE'])"), ('S', 'def empty_queue():', 'def clear_queue():'), ('I', '', '    """Clear the queue. Valid only if coming from tutor machine"""'), ('C', '    if request.remote_addr.upper() != TUTOR_MACHINE.upper():', '    if request.remote_addr.upper() != TUTOR_MACHINE.upper():'), ('S', '        abort(403, "Not authorised")', '        abort(403, "Only the tutor machine can clear the queue")'), ('C', '    else:', '    else:'), ('C', '        queue.clear_queue()', '        queue.clear_queue()'), ('S', '        response = jsonify({"message": "Queue emptied"})', '        response = jsonify({"message": "Queue cleared"})'), ('C', '        response.status_code = 204', '        response.status_code = 204'), ('C', '        return response', '        return response')]},
 
     ]
     for index, item in enumerate(test_data):

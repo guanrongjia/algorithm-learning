@@ -1,5 +1,5 @@
 def longest_common_substring(s1, s2):
-    """ calculate the longest common substring """
+    """ find the longest common substring """
     row_num = len(s1) + 1
     col_num = len(s2) + 1
     table = [[None] * col_num for i in range(row_num)]
@@ -8,10 +8,11 @@ def longest_common_substring(s1, s2):
             if row_index == 0 or col_index == 0:
                 table[row_index][col_index] = 0
             elif s1[row_index - 1] == s2[col_index - 1]:
-                table[row_index][col_index] = table[row_index - 1][col_index - 1] + 1
+                table[row_index][col_index] = table[row_index -
+                                                    1][col_index - 1] + 1
             else:
-                table[row_index][col_index] = max(table[row_index - 1][col_index], table[row_index][col_index - 1])
-    # find longest common substring
+                table[row_index][col_index] = max(
+                    table[row_index - 1][col_index], table[row_index][col_index - 1])
     result = []
     row_index = len(s1)
     col_index = len(s2)
@@ -31,8 +32,8 @@ def longest_common_substring(s1, s2):
 
 if __name__ == '__main__':
     # auto test
-    test_data = [{'s1' : "Look at me, I can fly!",
-                  's2' : "Look at that, it's a fly",
+    test_data = [{'s1': "Look at me, I can fly!",
+                  's2': "Look at that, it's a fly",
                   'result': ['Look at ,  a fly']},
 
                  {'s1': "abcdefghijklmnopqrstuvwxyz",
@@ -63,5 +64,3 @@ if __name__ == '__main__':
             print('result         ', result)
             print('calc_result    ', calc_result)
         print('is_correct    ', is_correct)
-
-

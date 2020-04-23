@@ -3,3 +3,4 @@
 /.git/
 /.idea/
 *.pyc
+.history/
